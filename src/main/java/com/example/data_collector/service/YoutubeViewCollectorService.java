@@ -29,8 +29,8 @@ public class YoutubeViewCollectorService {
     @Value("${youtube.view.api-key}")
     private String apiKey;
 
-//    @Scheduled(cron = "0 */5 * * * *")  // 5분마다
-    @Scheduled(cron = "*/10 * * * * *")  // 10초마다
+    @Scheduled(cron = "0 */5 * * * *")  // 5분마다
+//    @Scheduled(cron = "*/10 * * * * *")  // 10초마다
     public void collectViews() {
         String url = String.format("%s&id=%s&key=%s", baseUrl, videoIds, apiKey);
 
