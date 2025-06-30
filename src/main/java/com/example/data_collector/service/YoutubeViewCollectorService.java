@@ -22,15 +22,15 @@ public class YoutubeViewCollectorService {
     private final YoutubeViewRepository youtubeViewRepository;
     private final RestTemplate restTemplate;
 
-    @Value("${youtube.view.api-key}")
-    private String apiKey;
-    @Value("${youtube.view.video-ids}")
-    private String videoIds;
     @Value("${youtube.view.base-url}")
     private String baseUrl;
+    @Value("${youtube.view.video-ids}")
+    private String videoIds;
+    @Value("${youtube.view.api-key}")
+    private String apiKey;
 
 //    @Scheduled(cron = "0 */5 * * * *")  // 5분마다
-//    @Scheduled(cron = "*/30 * * * * *")  // 30초마다
+    @Scheduled(cron = "*/10 * * * * *")  // 10초마다
     public void collectViews() {
         String url = String.format("%s&id=%s&key=%s", baseUrl, videoIds, apiKey);
 
@@ -49,8 +49,8 @@ public class YoutubeViewCollectorService {
                 YoutubeView view = YoutubeView.builder()
                         .videoId(videoId)
                         .teamName(teamName)
-                        .viewCount(parseLongSafe(item.getStatistics().getViewCount()))
-                        .commentCount(parseLongSafe(item.getStatistics().getCommentCount()))
+                        .viewCount(item.getStatistics().getViewCount())
+                        .commentCount(item.getStatistics().getCommentCount())
                         .collectedAt(Instant.now())
                         .build();
 
@@ -59,7 +59,7 @@ public class YoutubeViewCollectorService {
                 log.warn("조회수 저장 실패 - videoId: {}, error: {}", item.getId(), e.getMessage());
             }
         }
-        log.info("로그 데이터 저장 완료: {}", nowKST());
+        log.info("조회수 데이터 저장 완료: {}", nowKST());
     }
 
 }

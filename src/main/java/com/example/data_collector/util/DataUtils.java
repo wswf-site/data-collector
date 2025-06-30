@@ -14,13 +14,4 @@ public class DataUtils {
             "eHaxR1rmSHo", "RHTokyo"
     );
     public static final String UNKNOWN_TEAM = "unknown";
-
-    public static long parseLongSafe(String value) {
-        try {
-            return Long.parseLong(value);
-        } catch (Exception e) {
-            log.warn("숫자 파싱 실패: '{}', 기본값 0 반환", value);
-            return 0L;
-        }
-    }
 }

@@ -15,7 +15,7 @@ public class YouTubeViewApiResponse {
     }
     @Data
     public static class Statistics {
-        private String viewCount;
-        private String commentCount;
+        private Long viewCount;
+        private Long commentCount;
     }
 }
