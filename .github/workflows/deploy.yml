@@ -5,9 +5,6 @@ on:
     branches:
       - main
 
-env:
-  DEPLOY_DIR: /home/ubuntu/${{ secrets.REPOSITORY_NAME }}/
-
 jobs:
   deploy:
     runs-on: ubuntu-latest
@@ -42,13 +39,13 @@ jobs:
         uses: aws-actions/amazon-ecr-login@v2
 
       - name: Docker 이미지 생성
-        run: docker build -t test-server .
+        run: docker build -t data-collector .
 
       - name: Docker 이미지에 Tag 붙이기
-        run: docker tag test-server ${{ steps.login-ecr.outputs.registry }}/${{ secrets.REPOSITORY_NAME }}:latest
+        run: docker tag data-collector ${{ steps.login-ecr.outputs.registry }}/data-collector:latest
 
       - name: ECR에 Docker 이미지 Push하기
-        run: docker push ${{ steps.login-ecr.outputs.registry }}/${{ secrets.REPOSITORY_NAME }}:latest
+        run: docker push ${{ steps.login-ecr.outputs.registry }}/data-collector:latest
 
       - name: .env 파일 생성
         run: |
@@ -61,7 +58,7 @@ jobs:
           username: ${{ secrets.EC2_USERNAME }}
           key: ${{ secrets.EC2_PRIVATE_KEY }}
           source: compose.yml,.env
-          target: /home/ubuntu/${{ secrets.REPOSITORY_NAME }}/
+          target: /home/ubuntu/data-collector/
 
       - name: SSH로 EC2에 접속하여 Docker Compose 배포
         uses: appleboy/ssh-action@v1.0.3
@@ -70,9 +67,8 @@ jobs:
           username: ${{ secrets.EC2_USERNAME }}
           key: ${{ secrets.EC2_PRIVATE_KEY }}
           script_stop: true
-          envs: DEPLOY_DIR
           script: |
-            cd $DEPLOY_DIR
+            cd /home/ubuntu/data-collector/
             docker compose down || true
             docker compose pull
             docker compose up -d
