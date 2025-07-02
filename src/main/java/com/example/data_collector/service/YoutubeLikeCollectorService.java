@@ -29,7 +29,7 @@ public class YoutubeLikeCollectorService {
     @Value("${youtube.like.base-url}")
     private String baseUrl;
 
-        @Scheduled(cron = "0 0,20 * * * *")  // 20분마다
+        @Scheduled(cron = "0 0,30 * * * *")  // 30분마다
 //    @Scheduled(cron = "*/30 * * * * *")  // 30초마다
     public void collectLikes() {
         for (String videoId : VIDEO_ID_TO_TEAM.keySet()) {
@@ -48,7 +48,7 @@ public class YoutubeLikeCollectorService {
                         .teamName(VIDEO_ID_TO_TEAM.getOrDefault(videoId, UNKNOWN_TEAM))
                         .likes(response.getLikes())
                         .dislikes(response.getDislikes())
-                        .rawLikes(response.getRawLikes()*100)
+                        .rawLikes(response.getRawLikes()*200)
                         .rawDislikes(response.getRawDislikes()*100)
                         .viewCount(response.getViewCount())
                         .dateCreated(Instant.parse(response.getDateCreated()))
